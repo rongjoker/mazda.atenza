@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" >
+<properties>
+		<property name="log.path">logs</property>
+		<property name="log.fileName">${log.path}/xy.swing.txt</property>
+	</properties>
+
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}]  %p %C{1}#%M(L%L) : %m%n" />
+		</Console>
+		<RollingFile name="rollingFile" fileName="${log.fileName}" filePattern="${log.path}/${date:yyyy-MM-dd}/${log.fileName}-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}]  %p %C{1}#%M(L%L) : %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="20"/>
+		</RollingFile >
+	</Appenders>
+	<Loggers>
+		<Root level="DEBUG">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" /> 
+			</Root>
+	</Loggers>
+</Configuration>
