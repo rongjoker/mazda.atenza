@@ -51,7 +51,7 @@ public class YoudaoTransUtil {
 		Core4Machine core = new Core4Machine("http://fanyi.youdao.com/translate?i=" + word + "&ue=utf-8&keyfrom=baidu&smartresult=dict&type=" + type, 3,
 				new RequestProperty());
 
-		LOG.info("word:" + word);
+		LOG.debug("word:" + word);
 
 		CrawlElement element = core.execute();
 
@@ -81,7 +81,7 @@ public class YoudaoTransUtil {
 		}
 
 		String json = code.replace("global.translatedJson", "").replace("=", "").trim().replace(";", "").trim();
-		LOG.info(json);
+		LOG.debug(json);
 		YoudaoResult entity = Htmltools.getGson().fromJson(json, YoudaoResult.class);
 
 		list.add(entity.getTranslateResult().get(0).get(0).getTgt());
@@ -93,7 +93,7 @@ public class YoudaoTransUtil {
 
 		for (String ent : entries) {
 			String sk = ent.trim();
-			LOG.info("sk:" + sk);
+			LOG.debug("sk:" + sk);
 			if (sk.length() > 0)
 				list.add(sk);
 		}
