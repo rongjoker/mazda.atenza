@@ -1,13 +1,8 @@
 package home.rong.joker.itools.form;
 
-import home.rong.joker.itools.util.YoudaoTransUtil;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -16,17 +11,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.Set;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,18 +23,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-
-import org.com.dms.sms.util.Htmltools;
-import org.com.ronger.joker.robot.Core4Machine;
 
 /**
  * @author joker4lr
@@ -113,17 +93,15 @@ public class SolrHomeMainForm extends JFrame {
 		// this.add(jlpic);
 		// this.pack();
 
-		center.setBackground(Color.BLACK);
-		// c.setBackground(Color.GRAY);
-
 		JTabbedPane tab = new JTabbedPane(JTabbedPane.LEFT);
+		tab.setOpaque(false);
+		// tab.setBackground(new Color(255, 255, 255, 100));
 
-		tab.addTab("翻译工具", new OnePanel());
-		// tab.addTab("转换工具", new TwoPanel());
+		tab.addTab("语言工具", new TranslationPanel());
+		tab.addTab("文件工具", new SystemFilePanel());
 
 		tab.setPreferredSize(new Dimension(700, 500));// tab的宽度高度
 		// tab.setBackground(null);
-		tab.setOpaque(false);
 
 		// center.add(tab, BorderLayout.WEST);
 
@@ -216,298 +194,6 @@ public class SolrHomeMainForm extends JFrame {
 			aboutDialog.setSize(450, 225);
 			aboutDialog.setLocationRelativeTo(null);
 		}
-
-	}
-
-	class OnePanel extends JPanel {
-
-		private static final long serialVersionUID = 1939564196227114527L;
-
-		public OnePanel() {
-			// this.setOpaque(false);
-			// this.setBackground(Color.GRAY);
-			this.setBackground(null);
-
-			final JTextArea textArea = new JTextArea();
-			textArea.setLineWrap(true);
-			textArea.setWrapStyleWord(true);
-			textArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
-			textArea.setEditable(true);
-			textArea.setColumns(20);
-			textArea.setRows(10);// 高度10个
-
-			final JTextArea textArea2 = new JTextArea();
-			textArea2.setLineWrap(true);
-			textArea2.setWrapStyleWord(true);
-			textArea2.setCursor(new Cursor(Cursor.TEXT_CURSOR));
-			textArea2.setEditable(false);
-			textArea.setColumns(20);
-			// textArea.setRows(5);
-
-			JScrollPane scroll = new JScrollPane();
-			// scroll.setOpaque(false);
-			scroll.setViewportView(textArea);
-			scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-			JButton button_ze = new JButton("翻译");
-
-			JButton button_url_encode = new JButton("url转码");
-
-			JButton button_url_decode = new JButton("url回码");
-
-			JButton button_uni_encode = new JButton("unicode转码");
-
-			JButton button_uni_decode = new JButton("unicode回码");
-
-			JButton button_json_pretty = new JButton("json格式化");
-
-			// JButton button_out_print = new JButton("输出");
-
-			JButton button_time = new JButton("时间");
-
-			button_ze.setHorizontalAlignment(SwingConstants.CENTER);
-
-			button_url_encode.setHorizontalAlignment(SwingConstants.CENTER);
-			button_url_decode.setHorizontalAlignment(SwingConstants.CENTER);
-			button_uni_encode.setHorizontalAlignment(SwingConstants.CENTER);
-			button_uni_decode.setHorizontalAlignment(SwingConstants.CENTER);
-			button_json_pretty.setHorizontalAlignment(SwingConstants.CENTER);
-			// button_out_print.setHorizontalAlignment(SwingConstants.CENTER);
-			button_time.setHorizontalAlignment(SwingConstants.CENTER);
-
-			button_ze.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-
-					String word = textArea.getText();
-					textArea2.setText(translationZ_E(word));
-				}
-			});
-
-			button_json_pretty.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-
-					String word = textArea.getText();
-					textArea2.setText(Htmltools.jsonFormatter(word));
-				}
-			});
-
-			button_url_encode.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-
-					String word = textArea.getText();
-
-					String result = URLencode(word);
-
-					textArea2.setText(result);
-				}
-			});
-
-			button_url_decode.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					String word = textArea.getText();
-					textArea2.setText(URLDecoder.decode(word));
-				}
-			});
-
-			button_uni_encode.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String word = textArea.getText();
-					try {
-						textArea2.setText(Htmltools.unicodeFromString(word));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-
-				}
-			});
-
-			button_uni_decode.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String word = textArea.getText();
-					textArea2.setText(Htmltools.unicodeToString(word));
-
-				}
-			});
-
-			// button_out_print.addActionListener(new ActionListener() {
-			//
-			// @Override
-			// public void actionPerformed(ActionEvent e) {
-			// String word = textArea.getText();
-			// System.out.println(1 + 1);
-			// textArea2.setText(word);
-			//
-			// }
-			// });
-
-			button_time.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-
-					textArea2.setText(System.currentTimeMillis() + "\n" + Htmltools.dateformatCurrent());
-				}
-			});
-
-			JScrollPane scroll2 = new JScrollPane();
-			scroll2.setViewportView(textArea2);
-			scroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-			JSplitPane translationPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scroll, scroll2);
-			// translationPane.setOpaque(false);
-			translationPane.setBackground(Color.YELLOW);
-			JPanel pane_right = new JPanel();
-			// pane_right.setOpaque(false);
-			// pane_right.setBackground(Color.BLUE);
-			GroupLayout layout_right = new GroupLayout(pane_right);
-			pane_right.setLayout(layout_right);
-
-			button_url_encode.setLayout(new FlowLayout(FlowLayout.LEADING));
-
-			int width = 100;
-			// 按钮宽度90
-			layout_right.setHorizontalGroup(layout_right.createSequentialGroup().addGroup(
-					layout_right.createParallelGroup().addComponent(button_ze, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-
-					.addComponent(button_url_encode, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-							.addComponent(button_url_decode, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-							.addComponent(button_uni_encode, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-							.addComponent(button_uni_decode, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-							.addComponent(button_json_pretty, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-							// .addComponent(button_out_print, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
-							.addComponent(button_time, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)));
-
-			int padding = 15;
-
-			layout_right.setVerticalGroup(layout_right.createSequentialGroup().addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_ze)).addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_url_encode)).addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_url_decode)).addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_uni_encode)).addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_uni_decode)).addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_json_pretty)).addGap(padding)
-					// .addGroup(layout_right.createParallelGroup().addComponent(button_out_print)).addGap(padding)
-					.addGroup(layout_right.createParallelGroup().addComponent(button_time))
-
-			);
-
-			GroupLayout layout = new GroupLayout(this);
-			this.setLayout(layout);
-
-			GroupLayout.SequentialGroup hvseqGroup1 = layout.createSequentialGroup();
-
-			// 水平左右，左边设置宽度为500
-			hvseqGroup1.addGroup(layout.createParallelGroup().addComponent(translationPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE))
-					.addGap(10).addGroup(layout.createParallelGroup().addComponent(pane_right));
-
-			layout.setHorizontalGroup(hvseqGroup1);
-
-			// layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)向上对齐，createParallelGroup构造方法可以设置对齐方式
-			layout.setVerticalGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup().addComponent(translationPane).addComponent(pane_right)));
-
-		}
-	}
-
-	class TwoPanel extends JPanel {
-
-		private static final long serialVersionUID = -5615249630125650766L;
-
-		public TwoPanel() {
-
-			JLabel label1 = new JLabel("xy.solr快捷登陆");
-			JLabel label2 = new JLabel("账号：");
-			JLabel label3 = new JLabel("密码：");
-
-			JTextField tf = new JTextField();
-			JPasswordField psf = new JPasswordField();
-			JCheckBox jcb1 = new JCheckBox("记住密码");
-			JCheckBox jcb2 = new JCheckBox("自动登录");
-
-			JButton jbn = new JButton("登录");
-
-			GroupLayout urllayout = new GroupLayout(this);
-			this.setLayout(urllayout);
-
-			// 创建GroupLayout的水平连续组，，越先加入的ParallelGroup，优先级级别越高。
-			GroupLayout.SequentialGroup hvseqGroup = urllayout.createSequentialGroup();
-			hvseqGroup.addGap(5);
-
-			ParallelGroup hpg1 = urllayout.createParallelGroup().addComponent(label2).addComponent(label3);// 并行1
-
-			hvseqGroup.addGroup(hpg1);
-
-			hvseqGroup.addGap(5);
-
-			ParallelGroup hpg2 = urllayout.createParallelGroup().addComponent(label1).addComponent(tf).addComponent(psf).addComponent(jcb1).addComponent(jcb2)
-					.addComponent(jbn);// 并行2
-
-			hvseqGroup.addGroup(hpg2);
-
-			urllayout.setHorizontalGroup(hvseqGroup);// 左右两大块
-
-			// 垂直
-			GroupLayout.SequentialGroup vseqGroup = urllayout.createSequentialGroup();
-
-			vseqGroup.addGroup(urllayout.createParallelGroup().addComponent(label1));
-
-			vseqGroup.addGap(10);
-
-			vseqGroup.addGroup(urllayout.createParallelGroup().addComponent(label2).addComponent(tf));
-
-			vseqGroup.addGap(5);
-
-			vseqGroup.addGroup(urllayout.createParallelGroup().addComponent(label3).addComponent(psf));
-
-			vseqGroup.addGap(5);
-
-			vseqGroup.addGroup(urllayout.createParallelGroup().addComponent(jcb1));
-
-			vseqGroup.addGap(5);
-
-			vseqGroup.addGroup(urllayout.createParallelGroup().addComponent(jcb2));
-
-			vseqGroup.addGap(5);
-
-			vseqGroup.addGroup(urllayout.createParallelGroup(Alignment.TRAILING).addComponent(jbn));
-
-			urllayout.setVerticalGroup(vseqGroup);
-
-		}
-
-	}
-
-	public String translationZ_E(String word) {
-
-		StringBuilder sb = new StringBuilder();
-
-		Set<String> set = YoudaoTransUtil.translate(word);
-
-		for (String s : set)
-			sb.append(s).append("\n");
-
-		return sb.toString();
-	}
-
-	public String translationE_Z(String word) {
-
-		StringBuilder sb = new StringBuilder();
-
-		Set<String> set = YoudaoTransUtil.translate(word);
-
-		for (String s : set)
-			sb.append(s).append("\n");
-
-		return sb.toString();
-	}
-
-	public String URLencode(String url) {
-
-		Core4Machine core = new Core4Machine(url, 3, null);
-
-		return core.buildURL(url);
 
 	}
 
