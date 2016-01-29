@@ -7,8 +7,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.com.dms.sms.bean.CrawlElement;
+import org.com.dms.sms.util.DeleteUtils;
 import org.com.dms.sms.util.Htmltools;
 import org.com.dms.sms.util.RequestProperty;
 import org.com.ronger.joker.robot.Core4Machine;
@@ -195,6 +198,61 @@ public class JtestMain {
 
 	}
 
+	public static void test7() {
+
+		float f = 3.9f;
+
+		int i = (int) f;
+		System.out.println(i);
+
+	}
+
+	public static void test8() {
+
+		String path = "D:/data/solr-home - 副本";
+		path = "我的QQ是:456456我的电话是:0532214我的邮箱是:aaa@aaa.com";
+		path = "java-data-import.xml";
+
+		String aka = "";
+		// regex
+		aka.split("");
+		String regex = "\\d+";
+		regex = "([a-z]+)(\\d+)";
+		regex = "^aaa";
+		regex = "data";
+		// regex = ".*?data.*?";
+		// regex = "data.*?";
+
+		Pattern pattern = Pattern.compile(regex);
+		// System.out.println(pattern.pattern());
+		// System.out.println(pattern.split(path)[0]);
+
+		Matcher matcher = pattern.matcher(path);
+
+		while (matcher.find()) {
+			System.out.print("group:" + matcher.group());
+			System.out.print(" start:" + matcher.start());
+			System.out.println(" end:" + matcher.end());
+		}
+
+		System.out.println("matches:" + matcher.matches());
+
+		String a = "*xyz*";
+		a = a.replace("*", ".*?");
+		System.out.println(a);
+
+		System.out.println(a.contains("ab"));
+
+	}
+
+	public static void test9() {
+		String path = "D:/data/solr-home/";
+
+		DeleteUtils du = new DeleteUtils();
+		du.removeChildByRegex(path, "data");
+
+	}
+
 	public static void main(String[] args) {
 
 		// test4();
@@ -203,7 +261,7 @@ public class JtestMain {
 
 		// trans("test");
 
-		test6();
+		test9();
 
 	}
 
