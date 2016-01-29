@@ -34,7 +34,7 @@ public class TranslationPanel extends JPanel {
 
 	public TranslationPanel() {
 
-		this.setOpaque(false);
+		// this.setOpaque(false);
 		// this.setBackground(Color.GRAY);
 		// this.setBackground(null);
 
@@ -160,10 +160,10 @@ public class TranslationPanel extends JPanel {
 		scroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		JSplitPane translationPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scroll, scroll2);
-		translationPane.setOpaque(false);
+		// translationPane.setOpaque(false);
 		// translationPane.setBackground(Color.YELLOW);
 		JPanel pane_right = new JPanel();
-		pane_right.setOpaque(false);
+		// pane_right.setOpaque(false);
 		// pane_right.setBackground(Color.BLUE);
 		GroupLayout layout_right = new GroupLayout(pane_right);
 		pane_right.setLayout(layout_right);
@@ -171,7 +171,7 @@ public class TranslationPanel extends JPanel {
 		button_url_encode.setLayout(new FlowLayout(FlowLayout.LEADING));
 
 		int width = 100;
-		// 按钮宽度90
+		// 按钮宽度90,水平排序
 		layout_right.setHorizontalGroup(layout_right.createSequentialGroup().addGroup(
 				layout_right.createParallelGroup().addComponent(button_ze, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
 
@@ -185,6 +185,7 @@ public class TranslationPanel extends JPanel {
 
 		int padding = 15;
 
+		// 垂直排序，间距15
 		layout_right.setVerticalGroup(layout_right.createSequentialGroup().addGap(padding).addGroup(layout_right.createParallelGroup().addComponent(button_ze))
 				.addGap(padding).addGroup(layout_right.createParallelGroup().addComponent(button_url_encode)).addGap(padding)
 				.addGroup(layout_right.createParallelGroup().addComponent(button_url_decode)).addGap(padding)
