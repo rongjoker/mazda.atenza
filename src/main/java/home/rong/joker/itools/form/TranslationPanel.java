@@ -203,7 +203,7 @@ public class TranslationPanel extends JPanel {
 		GroupLayout.SequentialGroup hvseqGroup1 = layout.createSequentialGroup();
 
 		// 水平左右，左边设置宽度为500
-		hvseqGroup1.addGroup(layout.createParallelGroup().addComponent(translationPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE))
+		hvseqGroup1.addGroup(layout.createParallelGroup().addComponent(translationPane, GroupLayout.PREFERRED_SIZE, 800, GroupLayout.PREFERRED_SIZE))
 				.addGap(10).addGroup(layout.createParallelGroup().addComponent(pane_right));
 
 		layout.setHorizontalGroup(hvseqGroup1);

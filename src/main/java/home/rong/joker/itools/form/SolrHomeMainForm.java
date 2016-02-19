@@ -99,8 +99,9 @@ public class SolrHomeMainForm extends JFrame {
 
 		tab.addTab("语言工具", new TranslationPanel());
 		tab.addTab("文件工具", new SystemFilePanel());
+		tab.addTab("链接工具", new LinkParserPanel());
 
-		tab.setPreferredSize(new Dimension(700, 500));// tab的宽度高度
+		tab.setPreferredSize(new Dimension(1000, 700));// tab的宽度高度
 		// tab.setBackground(null);
 
 		// center.add(tab, BorderLayout.WEST);
@@ -108,8 +109,8 @@ public class SolrHomeMainForm extends JFrame {
 		GroupLayout layout_center = new GroupLayout(center);
 		center.setLayout(layout_center);
 
-		int tab_width = 700;
-		int tab_hight = 500;
+		int tab_width = 1000;
+		int tab_hight = 700;
 
 		GroupLayout.Group h_group = layout_center.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
 				layout_center.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(tab, GroupLayout.PREFERRED_SIZE, tab_width,
@@ -135,8 +136,8 @@ public class SolrHomeMainForm extends JFrame {
 				System.exit(0);
 			}
 		});
-		this.setSize(800, 600);
-		this.setMinimumSize(new Dimension(800, 600));// 设置最小窗口
+		this.setSize(1080, 800);
+		this.setMinimumSize(new Dimension(1080, 800));// 设置最小窗口
 		setTitle("xy.solr编辑器");
 		// setUndecorated(true);// 去掉原本的装饰，比如menu
 		// setLocation(200, 150);// 设置居中后就无效
