@@ -27,6 +27,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.theme.DesertBluer;
+
 /**
  * @author joker4lr
  * @date:2016-1-7 下午1:33:21
@@ -199,9 +203,18 @@ public class SolrHomeMainForm extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		
+		PlasticLookAndFeel.setPlasticTheme(new DesertBluer());//设置主题
 
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			 //设置观感
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+            //UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+//            SwingUtilities.updateComponentTreeUI(this);
 		} catch (Exception e) {
 
 			e.printStackTrace();
