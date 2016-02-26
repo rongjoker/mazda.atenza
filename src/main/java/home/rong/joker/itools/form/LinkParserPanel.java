@@ -5,8 +5,13 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -19,8 +24,18 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
+import org.com.dms.sms.bean.CrawlElement;
+import org.com.dms.sms.read.PropertyReader;
 import org.com.dms.sms.util.Htmltools;
+import org.com.ronger.joker.robot.AbstractMachine;
+import org.com.ronger.joker.robot.Core4Machine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 
 /**
  * @author rongjoker
@@ -30,13 +45,15 @@ import org.com.dms.sms.util.Htmltools;
  * @version:0.0.1
  */
 public class LinkParserPanel extends JPanel {
+	
+	private Logger LOG = LoggerFactory.getLogger(getClass());
 
 	
 	private static final long serialVersionUID = 982041324868703578L;
 	
 	private javax.swing.JButton jButton_delete;
 	private javax.swing.JButton jButton_add;
-	private javax.swing.JComboBox jComboBox1;
+	private javax.swing.JComboBox<String> jComboBox1;
 	private javax.swing.JLabel jLabel_original;
 	private javax.swing.JLabel jLabel_current;
 	private javax.swing.JLabel jLabel_home;
@@ -56,6 +73,37 @@ public class LinkParserPanel extends JPanel {
 	
 	private javax.swing.JButton jButton_table_add;
 	private javax.swing.JButton jButton_table_delete;
+	private DefaultTableModel model;
+	private final Vector<String>  homenames;
+	String properties = null;
+	
+	
+	public void rebuildTable(Vector<Vector<String>> vData,Vector<String> vName){
+		
+		model = new DefaultTableModel( vData,vName);
+		jTable1.setModel(model);
+		
+		TableColumn firsetColumn = jTable1.getColumnModel().getColumn(0);
+		firsetColumn.setPreferredWidth(150);
+		firsetColumn.setMaxWidth(150);
+		firsetColumn.setMinWidth(150);
+		
+		jTable1.repaint();
+		jTable1.updateUI();
+		
+	}
+	
+	
+	public void rebuildComboBox(){
+		jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(homenames));
+		jComboBox1.repaint();
+		jComboBox1.updateUI();
+		
+		String value = Joiner.on(",").join(homenames);
+		
+		PropertyReader reader = new PropertyReader(properties);
+		reader.writeValue("home.path", value);
+	}
 	
 
 	public LinkParserPanel() {
@@ -78,6 +126,14 @@ public class LinkParserPanel extends JPanel {
 		int height_text = 30;
 		int height_table = 150;
 		
+		properties = this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile() + File.separator + "axela.properties";
+		
+		if(!new File(properties).exists()){
+			properties = "axela.properties";
+		}
+		
+		PropertyReader reader = new PropertyReader(properties);
+		String home_path = reader.readValue("home.path","http://127.0.0.1:8686/");
 		
 
 		javax.swing.GroupLayout jPanelxLayout = new javax.swing.GroupLayout(pane_left);
@@ -99,7 +155,7 @@ public class LinkParserPanel extends JPanel {
 		jLabel_param = new javax.swing.JLabel();
 		jScrollPane_table = new javax.swing.JScrollPane();
 		jTable1 = new javax.swing.JTable();
-		jComboBox1 = new javax.swing.JComboBox();
+		jComboBox1 = new javax.swing.JComboBox<String>();
 		jButton_delete = new javax.swing.JButton();
 		jButton_add = new javax.swing.JButton();
 		jButton_table_add = new javax.swing.JButton();
@@ -121,7 +177,6 @@ public class LinkParserPanel extends JPanel {
 		jTextArea_original.setRows(3);
 		Font font=new java.awt.Font("Monospaced", 0, 12);
 		jTextArea_original.setFont(font);
-		jTextArea_original.setText("http://42.62.58.80:8686/xy.solr/applist/query?q=%E5%85%A8%E6%B0%91%E5%A5%87%E8%BF%B9&fl=*&facet=true&facet.field=first_class_id&wt=json&defType=edismax&qf=title^3+yy_keyword^0.8+cus_keyword^0.2&bf=div%28downloadnum,100000%29&start=0&rows=20");
 		jTextArea_original.setLineWrap(true);
 		jTextArea_original.setWrapStyleWord(true);
 		jTextArea_original.setCursor(new Cursor(Cursor.TEXT_CURSOR));
@@ -136,15 +191,53 @@ public class LinkParserPanel extends JPanel {
 		jTextArea_current.setWrapStyleWord(true);
 		jTextArea_current.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 		jScrollPane_current.setViewportView(jTextArea_current);
+		jTextArea_current.setEditable(false);
 
 		jLabel_home.setText("前缀：");
 
-		jTextField_home.setText("http://42.62.58.80:8686/");
+		homenames = new Vector<String>();
+		
+		Iterable<String> _homenames = Splitter.on(",").split(home_path);
+		for(String _homename:_homenames)
+			homenames.add(_homename);
+		
+		jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(homenames));
+		
+		jButton_delete.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				homenames.remove(jComboBox1.getSelectedIndex());
+				rebuildComboBox();
+//				jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(homenames));
+//				jComboBox1.repaint();
+//				jComboBox1.updateUI();
+				
+			}
+		});
+		
+		
+		jButton_add.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				String _home = jTextField_home.getText();
+				homenames.add(0, _home);
+				rebuildComboBox();
+//				jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(homenames));
+//				jComboBox1.repaint();
+//				jComboBox1.updateUI();
+				
+			}
+		});
+		
+		
+		
 
 		jLabel_follow.setText("后缀：");
-
-		jTextField_follow.setText("xy.solr/applist/query");
-
 		jLabel_param.setText("参数：");
 		
 		jButton_table_add.setText("+");
@@ -164,75 +257,50 @@ public class LinkParserPanel extends JPanel {
 		jTable1.setRowHeight(30);
 		jTable1.getTableHeader().setReorderingAllowed(false);
 		
-		Vector<String>  vName = new Vector<String>();
+		final Vector<String>  vName = new Vector<String>();
 		vName.add("name");
 		vName.add("value");
 		
+		final Vector<Vector<String>>  vData = new Vector<Vector<String>>();
 		
-		Vector<Vector<String>>  vData = new Vector<Vector<String>>();
-		Vector<String> vRow = new Vector<String>();
-		vRow.add("asd");
-		vRow.add("asd2");
-		vData.add(vRow);
-		vData.add((Vector<String>)vRow.clone());
-		
-
-		
-		DefaultTableModel model = new DefaultTableModel(vData, vName);
+//		model = new DefaultTableModel( tableVales,columnNames);
+		model = new DefaultTableModel( vData,vName);
 		jTable1.setModel(model);
 		jTable1.setDefaultEditor(Object.class, new ColorEditor());
-		
-		
 		jScrollPane_table.setViewportView(jTable1);
 		
-//		jTable1.getTableHeader().getColumnModel().getColumn(0)
 		
-		
-		jTable1.getTableHeader().addMouseListener(new MouseListener() {
-			
+		jButton_table_add.addActionListener(new ActionListener() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
+				
+				//防止编辑丢失
+				if(jTable1.isEditing()){
+					jTable1.getCellEditor().stopCellEditing();
+				}
+				
+				Vector<String> rowData = new Vector<String>();
+				rowData.add("");
+				rowData.add("");
+				
+				vData.add(rowData);
+				rebuildTable(vData, vName);
 				
 			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				
-				 if (e.getClickCount() == 2) {
-					 logth("双击!");
-					 
-//					 JTableHeader _table = (JTableHeader)e.getSource();
-					 
-					 
-					 
-					}
-				
-			}
-		}
-				
-				
-				);
+		});
 		
-		
-		
-
-		jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+		jButton_table_delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				 int selectedRow = jTable1.getSelectedRow();//获得选中行的索引
+	                if(selectedRow!=-1)  //存在选中行
+	                {
+	                	vData.remove(selectedRow);
+	                	rebuildTable(vData, vName);
+	                }
+			}
+		});
 
 		jButton_delete.setText("删除");
 		jButton_add.setText("增加");
@@ -296,7 +364,8 @@ public class LinkParserPanel extends JPanel {
 		table_pad.addGroup(jPanelxLayout.createSequentialGroup().addGroup(jPanelxLayout.createParallelGroup().addComponent(jLabel_param)
 				.addComponent(jScrollPane_table, javax.swing.GroupLayout.PREFERRED_SIZE, height_table,
 						javax.swing.GroupLayout.PREFERRED_SIZE)));
-		table_pad.addGroup(jPanelxLayout.createSequentialGroup().addComponent(jButton_table_add).addComponent(jButton_table_delete));
+		table_pad.addGroup(jPanelxLayout.createSequentialGroup().addGap(javax.swing.GroupLayout.PREFERRED_SIZE, height_spit, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButton_table_add).
+				addGap(javax.swing.GroupLayout.PREFERRED_SIZE, height_spit, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButton_table_delete));
 		
 //		
 		GroupLayout.ParallelGroup current_pad = jPanelxLayout.createParallelGroup();
@@ -314,111 +383,6 @@ public class LinkParserPanel extends JPanel {
 		jPanelxLayout.setVerticalGroup(jPanelxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(vGroup));
 		
 		
-		
-		
-		
-		
-//		
-//		
-//		jPanelxLayout.setHorizontalGroup(jPanelxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-//				jPanelxLayout
-//						.createSequentialGroup()
-//						.addContainerGap()
-//						.addGroup(
-//								jPanelxLayout
-//										.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//										.addComponent(jScrollPane_console, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400,
-//												Short.MAX_VALUE)
-//										.addGroup(
-//												jPanelxLayout
-//														.createSequentialGroup()
-//														.addComponent(jLabel_home)
-//														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-//														.addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 135,
-//																javax.swing.GroupLayout.PREFERRED_SIZE)
-//														.addGap(28, 28, 28)
-//														.addComponent(jButton_delete)
-//														.addGap(18, 18, 18)
-//														.addComponent(jTextField_home, javax.swing.GroupLayout.PREFERRED_SIZE, 300,
-//																javax.swing.GroupLayout.PREFERRED_SIZE)
-//														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jButton_add))
-//										.addGroup(
-//												jPanelxLayout.createSequentialGroup().addComponent(jLabel_original)
-//														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-//														.addComponent(jScrollPane_original, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE))
-//										.addGroup(
-//												jPanelxLayout
-//														.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-//														.addGroup(
-//																javax.swing.GroupLayout.Alignment.LEADING,
-//																jPanelxLayout.createSequentialGroup().addComponent(jLabel_follow)
-//																		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//																		.addComponent(jTextField_follow, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-//														.addGroup(
-//																javax.swing.GroupLayout.Alignment.LEADING,
-//																jPanelxLayout
-//																		.createSequentialGroup()
-//																		.addGroup(
-//																				jPanelxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-//																						.addComponent(jLabel_current).addComponent(jLabel_param))
-//																		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//																		.addGroup(
-//																				jPanelxLayout
-//																						.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//																						.addComponent(jScrollPane_current, javax.swing.GroupLayout.DEFAULT_SIZE, 600,
-//																								Short.MAX_VALUE)
-//																						.addComponent(jScrollPane_table, javax.swing.GroupLayout.PREFERRED_SIZE,
-//																								javax.swing.GroupLayout.DEFAULT_SIZE,
-//																								javax.swing.GroupLayout.PREFERRED_SIZE)
-//																								
-//																								
-//																				)
-//																				
-//																
-//																))).addContainerGap()));
-//		jPanelxLayout.setVerticalGroup(jPanelxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-//				jPanelxLayout
-//						.createSequentialGroup()
-//						.addContainerGap()
-//						.addGroup(
-//								jPanelxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel_original)
-//										.addComponent(jScrollPane_original, javax.swing.GroupLayout.PREFERRED_SIZE, width_original_jTextArea, javax.swing.GroupLayout.PREFERRED_SIZE))
-//						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-//						.addGroup(
-//								jPanelxLayout
-//										.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-//										.addComponent(jLabel_home)
-//										.addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-//												javax.swing.GroupLayout.PREFERRED_SIZE)
-//										.addComponent(jButton_delete)
-//										.addComponent(jTextField_home, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-//												javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButton_add))
-//						.addGap(18, 18, 18)
-//						.addGroup(
-//								jPanelxLayout
-//										.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-//										.addComponent(jLabel_follow)
-//										.addComponent(jTextField_follow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-//												javax.swing.GroupLayout.PREFERRED_SIZE))
-//						.addGap(18, 18, 18)
-//						.addGroup(
-//								jPanelxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel_param)
-//										.addComponent(jScrollPane_table, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-//						.addGroup(
-//								jPanelxLayout
-//										.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//										.addGroup(jPanelxLayout.createSequentialGroup().addGap(51, 51, 51).addComponent(jLabel_current))
-//										.addGroup(
-//												jPanelxLayout
-//														.createSequentialGroup()
-//														.addGap(40, 40, 40)
-//														.addComponent(jScrollPane_current, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
-//																javax.swing.GroupLayout.PREFERRED_SIZE)))
-//						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
-//						.addComponent(jScrollPane_console, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap()));
-
-		
-
 		JPanel pane_right = new JPanel();
 		GroupLayout layout_right = new GroupLayout(pane_right);
 		pane_right.setLayout(layout_right);
@@ -428,7 +392,7 @@ public class LinkParserPanel extends JPanel {
 
 		GroupLayout.SequentialGroup hvseqGroup1 = layout.createSequentialGroup();
 
-		// 水平左右，左边设置宽度为500
+		// 水平左右，左边设置宽度为
 		hvseqGroup1.addGroup(layout.createParallelGroup().addComponent(pane_left, GroupLayout.PREFERRED_SIZE, 800, GroupLayout.PREFERRED_SIZE)).addGap(10)
 				.addGroup(layout.createParallelGroup().addComponent(pane_right));
 
@@ -437,18 +401,115 @@ public class LinkParserPanel extends JPanel {
 		// layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)向上对齐，createParallelGroup构造方法可以设置对齐方式
 		layout.setVerticalGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup().addComponent(pane_left).addComponent(pane_right)));
 
+		JButton button_parser = new JButton("解析");
 		JButton button_build = new JButton("组合");
-		JButton button_debug = new JButton("调试");
+		JButton button_debug = new JButton("执行");
 		JButton button_clear = new JButton("清理");
 		JButton button_export = new JButton("导出");
+		
+		
+		button_parser.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+					URL original_url = new URL(jTextArea_original.getText());
+					
+					jTextField_home.setText(original_url.getProtocol()+"://"+original_url.getAuthority()+"/");
+					jTextField_follow.setText(original_url.getPath());
+					
+					Map<String,String> param_map = Htmltools.getAttrs(original_url.getQuery());
+					
+					Iterator<Entry<String, String>> its = param_map.entrySet().iterator();
+					vData.clear();
+					while(its.hasNext()){
+						Entry<String, String> entry = its.next();
+						Vector<String> vRow = new Vector<String>();
+						String rkey = entry.getKey();
+						String rval = entry.getValue();
+						String unival = Htmltools.URLDecoder(rval);
+//						if(rkey.equals("q") || rkey.equals("fq")){
+//							if(!Htmltools.processconChinese(rval) && Htmltools.processconChinese(unival) ){
+//								rval = unival;
+//							}
+//							
+//						}
+						
+						vRow.add(rkey);
+						vRow.add(unival);
+						vData.add(vRow);
+					}
+					
+					rebuildTable(vData, vName);
+					
+				} catch (MalformedURLException e1) {
+					e1.printStackTrace();
+				} 
+				
+				
+				
+				
+
+			}
+		});
+		
+		button_build.addActionListener(new ActionListener() {
+			
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				logth("组合！");
+
+				try {
+					
+		
+				//防止编辑丢失
+				if(jTable1.isEditing()){
+					jTable1.getCellEditor().stopCellEditing();
+				}
+				
+				StringBuilder sbr = new StringBuilder();
+				
+				sbr.append(jComboBox1.getSelectedItem()).append(jTextField_follow.getText());
+				LOG.info(sbr.toString());
+				Map<String,String> param_map = new HashMap<String,String>();
+				
+				for(Vector<String> vRow:vData){
+					param_map.put(vRow.get(0), vRow.get(1));
+				}
+				LOG.info("param_map:{}",param_map);
+				try {
+					logth(Htmltools.getAttrstring(param_map));
+					sbr.append("?").append(Htmltools.getAttrstring(param_map));
+				} catch (Exception e1) {
+					LOG.error("error:{}",e1);
+				}
+				
+				LOG.info(sbr.toString());
+				
+				jTextArea_current.setText(sbr.toString());
+				logth(sbr.toString());
+				LOG.info(jTextArea_current.getText());
+				} catch (Exception e2) {
+					LOG.error("error:{}",e2);
+				}
+			}
+		});
 		
 		
 		button_debug.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				String url = jTextArea_current.getText();
+				
+				AbstractMachine core = new Core4Machine(url, 3, null);
+				CrawlElement element = core.execute();
+				jTextArea_console.setText(Htmltools.jsonFormatter(element.getHtmlCode()));
 
-				logth("测试");
 
 			}
 		});
@@ -463,9 +524,10 @@ public class LinkParserPanel extends JPanel {
 		});
 
 		int width = 100;// 按钮宽度90
-
+		//button_parser
 		layout_right.setHorizontalGroup(layout_right.createSequentialGroup().addGroup(
-				layout_right.createParallelGroup().addComponent(button_build, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
+				layout_right.createParallelGroup().addComponent(button_parser, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
+						.addComponent(button_build, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
 						.addComponent(button_debug, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
 						.addComponent(button_clear, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
 						.addComponent(button_export, GroupLayout.PREFERRED_SIZE, width, GroupLayout.PREFERRED_SIZE)
@@ -474,6 +536,7 @@ public class LinkParserPanel extends JPanel {
 		int padding = 15;
 
 		layout_right.setVerticalGroup(layout_right.createSequentialGroup().addGap(padding)
+				.addGroup(layout_right.createParallelGroup().addComponent(button_parser)).addGap(padding)
 				.addGroup(layout_right.createParallelGroup().addComponent(button_build)).addGap(padding)
 				.addGroup(layout_right.createParallelGroup().addComponent(button_debug)).addGap(padding)
 				.addGroup(layout_right.createParallelGroup().addComponent(button_clear)).addGap(padding)

@@ -77,40 +77,44 @@ public class JExample3 extends javax.swing.JFrame {
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-				.addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						javax.swing.GroupLayout.Alignment.LEADING,
-						layout.createSequentialGroup()
-								.addGroup(
-										layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel1)
-												.addComponent(jLabel2).addComponent(jLabel3))
-								.addGap(66, 66, 66)
-								.addGroup(
-										layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550,
-														javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addGroup(
-														layout.createSequentialGroup()
-																.addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE)
-																.addGap(79, 79, 79)
-																.addComponent(jButton1)
-																.addGap(68, 68, 68)
-																.addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.PREFERRED_SIZE).addGap(46, 46, 46)
-																.addComponent(jButton2))
-												.addGroup(
-														layout.createSequentialGroup()
-																.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE,
-																		421, javax.swing.GroupLayout.PREFERRED_SIZE)
-																.addGap(18, 18, 18)
-																.addGroup(
-																		layout.createParallelGroup(
-																				javax.swing.GroupLayout.Alignment.LEADING)
-																				.addComponent(jButton4).addComponent(jButton3)))))));
+				layout.createSequentialGroup()
+						.addGap(45, 45, 45)
+						.addGroup(
+								layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+										.addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+										.addGroup(
+												javax.swing.GroupLayout.Alignment.LEADING,
+												layout.createSequentialGroup()
+														.addGroup(
+																layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel1)
+																		.addComponent(jLabel2).addComponent(jLabel3))
+														.addGap(66, 66, 66)
+														.addGroup(
+																layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																		.addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550,
+																				javax.swing.GroupLayout.PREFERRED_SIZE)
+																		.addGroup(
+																				layout.createSequentialGroup()
+																						.addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE,
+																								javax.swing.GroupLayout.DEFAULT_SIZE,
+																								javax.swing.GroupLayout.PREFERRED_SIZE)
+																						.addGap(79, 79, 79)
+																						.addComponent(jButton1)
+																						.addGap(68, 68, 68)
+																						.addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE,
+																								javax.swing.GroupLayout.DEFAULT_SIZE,
+																								javax.swing.GroupLayout.PREFERRED_SIZE).addGap(46, 46, 46)
+																						.addComponent(jButton2))
+																		.addGroup(
+																				layout.createSequentialGroup()
+																						.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE,
+																								421, javax.swing.GroupLayout.PREFERRED_SIZE)
+																						.addGap(18, 18, 18)
+																						.addGroup(
+																								layout.createParallelGroup(
+																										javax.swing.GroupLayout.Alignment.LEADING)
+																										.addComponent(jButton3).addComponent(jButton4))))))
+						.addContainerGap(188, Short.MAX_VALUE)));
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
 				layout.createSequentialGroup()
 						.addGap(53, 53, 53)
@@ -141,13 +145,11 @@ public class JExample3 extends javax.swing.JFrame {
 																		.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 132,
 																				javax.swing.GroupLayout.PREFERRED_SIZE)))
 										.addGroup(
-												layout.createSequentialGroup().addGap(89, 89, 89).addComponent(jButton3).addGap(18, 18, 18)
+												layout.createSequentialGroup().addGap(76, 76, 76).addComponent(jButton3).addGap(31, 31, 31)
 														.addComponent(jButton4)))
 						.addGap(51, 51, 51)
 						.addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(115, Short.MAX_VALUE)
-								));
+								javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(115, Short.MAX_VALUE)));
 
 		pack();
 	}// </editor-fold>

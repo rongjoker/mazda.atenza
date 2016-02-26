@@ -134,7 +134,6 @@ public class TranslationPanel extends JPanel {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-
 			}
 		});
 
