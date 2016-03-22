@@ -97,7 +97,7 @@ public class TranslationPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				String word = textArea.getText();
-				textArea2.setText(Htmltools.jsonFormatter(word));
+				textArea2.setText(Htmltools.gsonFormatter(word));
 			}
 		});
 
@@ -215,6 +215,8 @@ public class TranslationPanel extends JPanel {
 	public String translation(String word) {
 
 		StringBuilder sb = new StringBuilder();
+		
+		word = Htmltools.URLEncoder(word);
 
 		Set<String> set = YoudaoTransUtil.translate(word);
 

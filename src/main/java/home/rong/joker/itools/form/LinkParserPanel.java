@@ -508,7 +508,7 @@ public class LinkParserPanel extends JPanel {
 				
 				AbstractMachine core = new Core4Machine(url, 3, null);
 				CrawlElement element = core.execute();
-				jTextArea_console.setText(Htmltools.jsonFormatter(element.getHtmlCode()));
+				jTextArea_console.setText(Htmltools.gsonFormatter(element.getHtmlCode()));
 
 
 			}
