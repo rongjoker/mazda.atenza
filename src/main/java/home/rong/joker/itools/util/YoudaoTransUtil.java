@@ -50,11 +50,11 @@ public class YoudaoTransUtil {
 
 		Core4Machine core = new Core4Machine("http://fanyi.youdao.com/translate?i=" + word + "&ue=utf-8&keyfrom=baidu&smartresult=dict&type=" + type, 3,
 				new RequestProperty());
-
+		
 		LOG.debug("word:" + word);
 
 		CrawlElement element = core.execute();
-
+		
 		Elements es = Jsoup.parse(element.getHtmlCode()).getElementsByTag("script");
 
 		Iterator<Element> it = es.iterator();
