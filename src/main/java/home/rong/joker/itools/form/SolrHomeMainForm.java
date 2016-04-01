@@ -25,11 +25,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.theme.DesertBluer;
+import com.jgoodies.looks.plastic.theme.SkyBluer;
 
 /**
  * @author joker4lr
@@ -65,6 +66,22 @@ public class SolrHomeMainForm extends JFrame {
 	}
 
 	public SolrHomeMainForm() {
+		
+		PlasticLookAndFeel.setPlasticTheme(new SkyBluer());//设置主题
+
+		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			 //设置观感
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+            //UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+            SwingUtilities.updateComponentTreeUI(this);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 
 		// 在此设置无效，居中显示
 		// setLocationRelativeTo(null);
@@ -204,23 +221,10 @@ public class SolrHomeMainForm extends JFrame {
 
 	public static void main(String[] args) {
 		
-		PlasticLookAndFeel.setPlasticTheme(new DesertBluer());//设置主题
 
-		try {
-//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			 //设置观感
-            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-            //UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
-            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticLookAndFeel");
-            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-            //UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-//            SwingUtilities.updateComponentTreeUI(this);
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
 
 		SolrHomeMainForm form = new SolrHomeMainForm();
+		
 		form.setLocationRelativeTo(null);// 在main方法下设置才有居中效果
 
 	}

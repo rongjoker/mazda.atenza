@@ -22,7 +22,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import org.com.dms.sms.util.DeleteUtils;
 import org.com.dms.sms.util.Htmltools;
@@ -286,11 +285,11 @@ public class SystemFilePanel extends JPanel {
 				JFileChooser chooser = new JFileChooser();
 				
 				chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				try {
-					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+//				try {
+//					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//				} catch (Exception ex) {
+//					ex.printStackTrace();
+//				}
 				
 				String path = jTextField_path.getText();
 				

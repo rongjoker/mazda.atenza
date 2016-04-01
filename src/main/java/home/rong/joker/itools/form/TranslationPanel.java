@@ -216,8 +216,6 @@ public class TranslationPanel extends JPanel {
 
 		StringBuilder sb = new StringBuilder();
 		
-		word = Htmltools.URLEncoder(word);
-
 		Set<String> set = YoudaoTransUtil.translate(word);
 
 		for (String s : set)
